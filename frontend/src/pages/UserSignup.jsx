@@ -1,5 +1,7 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { UserDataContext } from "../context/UserContext";
 
 const UserSignup = () => {
   const [email, setEmail] = useState("");
@@ -7,6 +9,10 @@ const UserSignup = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userData, setUserData] = useState({});
+
+  const navigate = useNavigate();
+
+  const { user, setUser } = useContext(UserDataContext);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -19,6 +25,20 @@ const UserSignup = () => {
       password: password,
     };
 
+    const response = axios.post(
+      `${import.meta.env.VITE_BASE_URL}/user/register`,
+      newUser
+    );
+    console.log(response);
+
+    if (response.status === 201) {
+      const data = response.data;
+      console.log("User Created");
+      setUserData(data.user);
+
+      navigate("/home");
+    }
+
     setEmail("");
     setFirstName("");
     setLastName("");
@@ -28,11 +48,7 @@ const UserSignup = () => {
     <div>
       <div className="p-7 h-screen flex flex-col justify-between">
         <div>
-          <img
-            className="w-16 mb-10"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYQy-OIkA6In0fTvVwZADPmFFibjmszu2A0g&s"
-            alt=""
-          />
+          <h3 className=" text-3xl w-16 mb-10">VELOX</h3>
 
           <form
             onSubmit={(e) => {
