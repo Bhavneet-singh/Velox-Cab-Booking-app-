@@ -12,14 +12,14 @@ const UserLogin = () => {
 
   const navigate = useNavigate();
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     const user = {
       email,
       password,
     };
 
-    const response = axios.post(
+    const response = await axios.post(
       `${import.meta.env.VITE_BASE_URL}/user/login`,
       user
     );
@@ -27,8 +27,8 @@ const UserLogin = () => {
 
     if (response.status === 200) {
       const data = response.data;
-      console.log("Logged In");
       setUser(data.user);
+      localStorage.setItem("token", data.token);
       navigate("/home");
     }
     setEmail("");
@@ -37,7 +37,7 @@ const UserLogin = () => {
 
   return (
     <div className="p-7 h-screen flex flex-col justify-between">
-      <div>
+      <div>b
         <h3 className=" text-3xl w-16 mb-10">VELOX</h3>
 
         <form onSubmit={(e) => submitHandler(e)}>
